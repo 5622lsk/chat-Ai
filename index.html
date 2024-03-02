@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>희희 신난당</title>
+</head>
+
+<body>
+    <style>
+        body{
+            background: #ffeeee;
+        }
+        .chat-content {
+            height: 350px;
+            overflow-y: scroll;
+        }
+
+        .line {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .chat-box {
+            background: #fff;
+            padding: 8px;
+            border-radius: 15px;
+            max-width: 200px;
+        }
+
+        .mine {
+            margin-left: auto;
+            padding: 8px;
+            border-radius: 15px;
+            background: #ffd4d4;
+        }
+
+        .send{
+            background: #ffd4d4;
+        }
+        .box {
+            display: flex;
+            align-items: center;
+            margin-top: 20px; 
+        }
+
+        #input {
+            flex: 1;
+            margin-right: 10px; 
+        }
+
+        #send {
+            background: #ffd4d4;
+            border: none;
+            padding: 8px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+    </style>
+    <div class="chat-content">
+        <div class="line">
+            <span class="chat-box"></span>
+        </div>
+        <div class="line">
+            <span class="chat-box mine"></span>
+        </div>
+    </div>
+    <div class = "box">
+    <input class="chat-box" id="input">
+    <button id ="send">전송</button>
+    </div>
+
+
+
+    <script type="module">
+        document.querySelector('#send').addEventListener('click', async function () {
+            const userInput = document.querySelector('#input').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/ask-openai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userInput }),
+                });
+
+                const result = await response.json();
+
+                var template = `<div class="line">
+                    <span class="chat-box mine">${userInput}</span>
+                </div>
+                <div class="line">
+                    <span class="chat-box">${result.response}</span>
+                </div>`;
+
+                document.querySelector('.chat-content').insertAdjacentHTML('beforeend', template);
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>희희 신난당</title>
+</head>
+
+<body>
+    <style>
+        body {
+            background: #ffeeee;
+        }
+
+        .chat-content {
+            height: 350px;
+            overflow-y: scroll;
+        }
+
+        .line {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between; /* 시간을 채팅 박스 옆에 정렬 */
+        }
+
+        .chat-box {
+            background: #fff;
+            padding: 8px;
+            border-radius: 15px;
+            max-width: 200px;
+        }
+
+        .mine {
+            margin-left: auto;
+            padding: 8px;
+            border-radius: 15px;
+            background: #ffd4d4;
+        }
+
+        .send {
+            background: #ffd4d4;
+        }
+
+        .box {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        #send {
+            background: #ffd4d4;
+            border: none;
+            padding: 8px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="chat-content">
+        <div class="line">
+            <span class="chat-box"></span>
+        </div>
+        <div class="line">
+            <span class="chat-box mine"></span>
+            <span class="timestamp"></span>
+        </div>
+    </div>
+
+    <div class="box">
+        <input class="chat-box" id="input">
+        <button id="send">전송</button>
+    </div>
+
+    <script type="module">
+        document.querySelector('#send').addEventListener('click', async function () {
+            const userInput = document.querySelector('#input').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/ask-openai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userInput }),
+                });
+
+                const result = await response.json();
+
+                // 현재 시간을 가져오기
+                const currentTime = new Date().toLocaleTimeString();
+
+                // 대화 박스 및 시간 표시 템플릿
+                var template = `<div class="line">
+                    <span class="chat-box mine">${userInput}</span>
+                    <span class="timestamp">${currentTime}</span>
+                </div>  `
+
+
+                document.querySelector('.chat-content').insertAdjacentHTML('beforeend', template);
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
